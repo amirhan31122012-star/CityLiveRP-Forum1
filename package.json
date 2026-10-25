@@ -1,0 +1,15 @@
+{
+  "name": "citylive-rp-forum",
+  "version": "3.0.0",
+  "private": true,
+  "description": "CityLive RP forum prototype",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1"
+  }
+}
