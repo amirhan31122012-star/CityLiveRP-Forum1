@@ -1,0 +1,45 @@
+CREATE TABLE users (
+  nick TEXT PRIMARY KEY,
+  password_hash TEXT NOT NULL,
+  level INTEGER NOT NULL DEFAULT 0,
+  title TEXT NOT NULL DEFAULT '',
+  title_color TEXT NOT NULL DEFAULT '#ffffff',
+  avatar TEXT NOT NULL DEFAULT '',
+  signature TEXT NOT NULL DEFAULT '',
+  bio TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE UNIQUE INDEX users_nick_lower_idx ON users (LOWER(nick));
+
+CREATE TABLE threads (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  author TEXT NOT NULL,
+  closed BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE posts (
+  thread_id INTEGER NOT NULL REFERENCES threads(id) ON DELETE CASCADE,
+  id INTEGER NOT NULL,
+  author TEXT NOT NULL,
+  body TEXT NOT NULL,
+  reply_to INTEGER,
+  reactions JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (thread_id, id)
+);
+
+CREATE TABLE profile_comments (
+  id BIGSERIAL PRIMARY KEY,
+  target TEXT NOT NULL,
+  author TEXT NOT NULL,
+  text TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE sessions (
+  token TEXT PRIMARY KEY,
+  nick TEXT NOT NULL REFERENCES users(nick) ON DELETE CASCADE ON UPDATE CASCADE,
+  expires_at TIMESTAMPTZ NOT NULL
+);
